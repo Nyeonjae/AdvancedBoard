@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyeonjae.advancedbbs.mappers.BoardMapper">
+<select id="selectBoardById"
+        resultType="com.nyeonjae.advancedbbs.entities.BoardEntity">
+        SELECT id AS `id` ,               <!--별명을 지어서 entity 의 이름과 동일하게 하는 습관을 들이자-->
+               text AS `text`
+        FROM `advanced_bbs`.`boards`
+        WHERE `id` = #{id}          <!-- 보드매퍼의 Param 이랑 똑같이 -->
+        LIMIT 1                     <!--for문이 계속 도는걸 방지 -->
+</select>
+</mapper>
+

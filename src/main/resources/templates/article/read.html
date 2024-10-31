@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${article == null ? '오류' : article.getTitle()}"></title>
+    <script th:if="${article == null}">
+        alert('존재하지 않는 게시글입니다. 주소를 다시 확인해 주세요.')
+        if (history.length === 1) {
+            window.close();
+        }
+        else {
+            history.back();
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/styles/common.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/styles/read.css" type="text/css">
+</head>
+<body th:if="${article != null}">
+<main id="main"></main>
+?
+</body>
+</html>

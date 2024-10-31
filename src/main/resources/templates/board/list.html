@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${board == null ? '오류겐' : board.getText()}">종율인사이드</title>
+    <script defer th:if="${board == null}">
+        alert('존재하지 않는 게시판입니다. 주소를 다시 확인해 주세요.'); // 클라이언트 실행
+        if (history.length <= 1) {
+            // 뒤로가기 할 페이지가 없는 상황
+            window.close(); // 탭닫기
+        } else {
+            history.back(); // 뒤로가기
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/styles/common.css">
+    <link rel="stylesheet" href="/board/assets/styles/list.css">
+</head>
+<body th:if="${board != null}">
+<main id="main">
+    <h1 class="title" th:text="${board.getText()}"></h1> <!--서버에서 실행됨-->
+    <table class="article-table">
+        <thead>
+        <tr>
+            <th scope="col">번호</th>
+            <th class="spring" scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">조회수</th>
+            <th scope="col">작성일</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>3</td>
+            <td>양다리 걸친 썰 푼다 ㅋㅋ</td>
+            <td>김종율</td>
+            <td>333</td>
+            <td>2024-10-30 13:33</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>아까 학원 얘기한 사람인데 고소당했다</td>
+            <td>김종율</td>
+            <td>2,222</td>
+            <td>2024-10-30 12:22</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>학원에서 옆자리 사람 존나 불편하지 않냐?</td>
+            <td>김종율</td>
+            <td>1</td>
+            <td>2024-10-30 12:11</td>
+        </tr>
+
+        </tbody>
+    </table>
+    <div class="button-container">
+        <div class="spring"></div>
+        <a th:href="@{'/article/write' (boardId=${board.getId()})}" class="button write">작성</a>
+    </div>
+</main>
+
+
+</body>
+</html>

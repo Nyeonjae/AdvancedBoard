@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title th:text="${board == null ? '오류겐' : board.getText()}">종율인사이드</title>
+    <script defer th:if="${board == null}">
+        alert('존재하지 않는 게시판입니다. 주소를 다시 확인해 주세요.'); // 클라이언트 실행
+        if (history.length <= 1) {
+            // 뒤로가기 할 페이지가 없는 상황
+            window.close(); // 탭닫기
+        } else {
+            history.back(); // 뒤로가기
+        }
+    </script>
+    <link rel="stylesheet" href="/assets/styles/common.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/styles/write.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/libraries/ckeditor/ckeditor5-content.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/libraries/ckeditor/ckeditor5-editor.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/libraries/ckeditor/ckeditor5.css" type="text/css">
+    <script src="/article/assets/libraries/ckeditor/ckeditor5.umd.js" type="text/javascript"></script>
+    <script defer src="/article/assets/scripts/write.js" type="text/javascript"></script>
+    <script src="/article/assets/libraries/ckeditor/ko.umd.js" type="text/javascript"></script>
+
+
+</head>
+<body th:if="${board != null}">
+<form method="post" id="main">
+    <h1 class="title write" th:text="${'작성 -' + board.getText()}"></h1> <!--서버에서 실행됨-->
+    <div class="writer-container">
+        <label class="label">
+            <input required type="text" class="input nickname" maxlength="10" placeholder="닉네임" minlength="2" name="nickname">
+        </label>
+        <label class="label">
+            <input required type="password" class="input password" maxlength="50" placeholder="비밀번호" minlength="4" name="password">
+        </label>
+        <label class="label">
+            <input required type="password" class="input password-check" maxlength="50" placeholder="비밀번호 확인" minlength="4" name="passwordCheck">
+        </label>
+    </div>
+    <label class="label">
+        <input required class="input title" maxlength="100" name="title" placeholder="제목을 입력해 주세요." type="text">
+    </label>
+    <label class="label">
+        <textarea class="content" name="content"></textarea>
+    </label>
+    <div class="button-container">
+        <div class="spring"></div>
+        <a th:href="@{'/board/list' (id=${board.getId()})}" class="button cancel">취소</a>
+        <button class="button write" type="submit">작성</button>
+    </div>
+</form>
+
+
+</body>
+</html>
