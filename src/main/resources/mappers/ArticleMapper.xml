@@ -31,5 +31,23 @@
         WHERE `index` = #{index}
         LIMIT 1
     </select>
+
+    <update id="updateArticle"
+        parameterType="com.nyeonjae.advancedbbs.entities.ArticleEntity">
+        UPDATE `advanced_bbs`.`articles`
+        SET `board_id` = #{boardId},
+            `nickname` = #{nickname},
+            `password` = #{password},
+            `title` = #{title},
+            `content`= #{content},
+            `view` = #{view},
+            `created_at` = #{createdAt},
+            `updated_at` = #{updatedAt},
+            `deleted_at` = #{deletedAt}
+        WHERE `index` = #{index}
+        LIMIT 1
+    </update>
 </mapper>
+
+
 

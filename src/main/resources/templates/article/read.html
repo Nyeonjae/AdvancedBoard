@@ -5,21 +5,63 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="${article == null ? '오류' : article.getTitle()}"></title>
-    <script th:if="${article == null}">
+    <title th:text="${article == null || board == null ? '오류' : article.getTitle()}"></title>
+    <script th:if="${article == null || board == null}">
         alert('존재하지 않는 게시글입니다. 주소를 다시 확인해 주세요.')
         if (history.length === 1) {
             window.close();
-        }
-        else {
+        } else {
             history.back();
         }
     </script>
+    <script defer src="/article/assets/scripts/read.js"></script>
     <link rel="stylesheet" href="/assets/styles/common.css" type="text/css">
-    <link rel="stylesheet" href="/article/assets/styles/read.css" type="text/css">
+    <link rel="stylesheet" href="/article/assets/styles/read.css">
+
 </head>
-<body th:if="${article != null}">
-<main id="main"></main>
-?
+<body th:if="${article != null && board != null}">
+<div id="cover"></div>
+<form id="passwordDialog">
+    <span class="message">비밀번호를 입력해 주세요</span>
+    <input name="index" type="hidden" th:value="${article.getIndex()}">
+    <input name="mode" type="hidden">
+    <label class="label">
+        <input required class="field" name="password" maxlength="50" minlength="4" type="password">
+    </label>
+    <div class="button-container">
+        <button name="cancel" type="button" class="--obj-button -light">취소</button>
+        <button type="submit" class="--obj-button -blue">확인</button>
+    </div>
+</form>
+<main id="main">
+<h1 class="title" th:text="${board.getText()}"></h1>
+<table class="table">
+    <tbody>
+    <tr>
+        <th scope="row">작성자</th>
+        <td th:text="${article.getNickname()}"></td>
+        <th scope="row">작성일</th>
+        <td th:text="${article.getCreatedAt()}"></td>
+        <th scope="row">조회수</th>
+        <td th:text="${article.getView()}"></td>
+
+    </tr>
+    <tr>
+        <th scope="row">제목</th>
+        <td colspan="5" th:text="${article.getTitle()}"></td>
+    </tr>
+    <tr>
+        <th scope="row">내용</th>
+        <td colspan="5" th:utext="${article.getContent()}"></td>
+    </tr>
+    </tbody>
+</table>
+    <div class="button-container">
+        <a class="button back --obj-button -light" th:href="@{'/board/list' (id=${board.getId()})}">목록</a>
+        <span class="spring"></span>
+        <button class="button modify --obj-button -blue" name="modify" type="button">수정</button>
+        <button class="button delete --obj-button -red" name="delete" type="button">삭제</button>
+    </div>
+</main>
 </body>
 </html>
