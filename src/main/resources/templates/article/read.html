@@ -34,33 +34,129 @@
     </div>
 </form>
 <main id="main">
-<h1 class="title" th:text="${board.getText()}"></h1>
-<table class="table">
-    <tbody>
-    <tr>
-        <th scope="row">작성자</th>
-        <td th:text="${article.getNickname()}"></td>
-        <th scope="row">작성일</th>
-        <td th:text="${article.getCreatedAt()}"></td>
-        <th scope="row">조회수</th>
-        <td th:text="${article.getView()}"></td>
+    <h1 class="title" th:text="${board.getText()}"></h1>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th scope="row">작성자</th>
+            <td th:text="${article.getNickname()}"></td>
+            <th scope="row">작성일</th>
+            <td th:text="${article.getCreatedAt()}"></td>
+            <th scope="row">조회수</th>
+            <td th:text="${article.getView()}"></td>
 
-    </tr>
-    <tr>
-        <th scope="row">제목</th>
-        <td colspan="5" th:text="${article.getTitle()}"></td>
-    </tr>
-    <tr>
-        <th scope="row">내용</th>
-        <td colspan="5" th:utext="${article.getContent()}"></td>
-    </tr>
-    </tbody>
-</table>
+        </tr>
+        <tr>
+            <th scope="row">제목</th>
+            <td colspan="5" th:text="${article.getTitle()}"></td>
+        </tr>
+        <tr>
+            <th scope="row">내용</th>
+            <td colspan="5" th:utext="${article.getContent()}"></td>
+        </tr>
+        </tbody>
+    </table>
     <div class="button-container">
         <a class="button back --obj-button -light" th:href="@{'/board/list' (id=${board.getId()})}">목록</a>
         <span class="spring"></span>
         <button class="button modify --obj-button -blue" name="modify" type="button">수정</button>
         <button class="button delete --obj-button -red" name="delete" type="button">삭제</button>
+    </div>
+    <div class="comment-container">
+        <h2 class="title">댓글 (13)</h2>
+        <form class="form" id="commentForm">
+            <div class="writer-wrapper">
+                <label class="label">
+                    <span class="text">작성자</span>
+                    <input required class="field" maxlength="10" minlength="1" name="nickname" type="text">
+                </label>
+                <label class="label">
+                    <span class="text">비밀번호</span>
+                    <input required class="field" maxlength="50" minlength="4" name="password" type="password">
+                </label>
+            </div>
+            <label class="label spring">
+                <span class="text">내용</span>
+                <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>
+            </label>
+            <button class="--obj-button -blue" type="submit">댓글 쓰기</button>
+        </form>
+
+
+
+
+        <ul class="list">
+            <li class="item">
+                <div class="top">
+                <span class="nickname">작정자 자리</span>
+                <span class="spring"></span>
+                <span class="datetime">2024-11-08 11:34</span>
+
+                </div>
+                <div class="content">내용자리</div>
+                <div class="action-container">
+                    <input id="commentNoAction0" name="comment0" type="radio" value="noAction">
+                    <label class="action">
+                        <input name="comment0" type="radio" value="reply">
+                        <span class="text">답글 쓰기</span>
+                    </label>
+                    <label class="action">
+                        <input name="comment0" type="radio" value="modify">
+                        <span class="text">수정</span>
+                    </label>
+                    <button class="action" name="delete" type="button">삭제</button>
+                </div>
+
+
+<!--                ##########################절취선 ############################################-->
+                <form class="form reply">
+                    <input type="hidden">
+                    <div class="writer-wrapper">
+                        <label class="label">
+                            <span class="text">작성자</span>
+                            <input required class="field" maxlength="10" minlength="1" name="nickname" type="text">
+                        </label>
+                        <label class="label">
+                            <span class="text">비밀번호</span>
+                            <input required class="field" maxlength="50" minlength="4" name="password" type="password">
+                        </label>
+                    </div>
+                    <label class="label spring">
+                        <span class="text">내용</span>
+                        <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>
+                    </label>
+                    <div class="button-container">
+                        <button class="--obj-button -blue" type="submit">답글 쓰기</button>
+                        <label class="--obj-button -light" for="commentNoAction0">취소</label>
+                    </div>
+                </form>
+                <form class="form modify">
+                    <input type="hidden">
+                    <div class="writer-wrapper">
+                        <label class="label">
+                            <span class="text">작성자</span>
+                            <input required class="field" maxlength="10" minlength="1" name="nickname" type="text">
+                        </label>
+                        <label class="label">
+                            <span class="text">비밀번호</span>
+                            <input required class="field" maxlength="50" minlength="4" name="password" type="password">
+                        </label>
+                    </div>
+                    <label class="label spring">
+                        <span class="text">내용</span>
+                        <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>
+                    </label>
+                    <div class="button-container">
+                        <button class="--obj-button -blue" type="submit">댓글 수정</button>
+                        <label class="--obj-button -light" for="commentNoAction0">취소</label>
+                    </div>
+
+                </form>
+
+            </li>
+        </ul>
+
+
     </div>
 </main>
 </body>

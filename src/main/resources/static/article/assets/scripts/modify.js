@@ -1,3 +1,6 @@
+const $main = document.getElementById('main');
+
+
 const {
     ClassicEditor,
     AccessibilityHelp,
@@ -295,7 +298,7 @@ const editorConfig = {
         ]
     },
     initialData:
-        '<h2>Congratulations on setting up CKEditor 5! 🎉</h2>\n<p>\n    You\'ve successfully created a CKEditor 5 project. This powerful text editor will enhance your application, enabling rich text editing\n    capabilities that are customizable and easy to use.\n</p>\n<h3>What\'s next?</h3>\n<ol>\n    <li>\n        <strong>Integrate into your app</strong>: time to bring the editing into your application. Take the code you created and add to your\n        application.\n    </li>\n    <li>\n        <strong>Explore features:</strong> Experiment with different plugins and toolbar options to discover what works best for your needs.\n    </li>\n    <li>\n        <strong>Customize your editor:</strong> Tailor the editor\'s configuration to match your application\'s style and requirements. Or even\n        write your plugin!\n    </li>\n</ol>\n<p>\n    Keep experimenting, and don\'t hesitate to push the boundaries of what you can achieve with CKEditor 5. Your feedback is invaluable to us\n    as we strive to improve and evolve. Happy editing!\n</p>\n<h3>Helpful resources</h3>\n<ul>\n    <li>📝 <a href="https://orders.ckeditor.com/trial/premium-features">Trial sign up</a>,</li>\n    <li>📕 <a href="https://ckeditor.com/docs/ckeditor5/latest/installation/index.html">Documentation</a>,</li>\n    <li>⭐️ <a href="https://github.com/ckeditor/ckeditor5">GitHub</a> (star us if you can!),</li>\n    <li>🏠 <a href="https://ckeditor.com">CKEditor Homepage</a>,</li>\n    <li>🧑‍💻 <a href="https://ckeditor.com/ckeditor-5/demo/">CKEditor 5 Demos</a>,</li>\n</ul>\n<h3>Need help?</h3>\n<p>\n    See this text, but the editor is not starting up? Check the browser\'s console for clues and guidance. It may be related to an incorrect\n    license key if you use premium features or another feature-related requirement. If you cannot make it work, file a GitHub issue, and we\n    will help as soon as possible!\n</p>\n',
+        $main['content'].value,
     language: 'ko',
     link: {
         addTargetToExternalLinks: true,
@@ -383,12 +386,8 @@ const editorConfig = {
     table: {
         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
     },
-    simpleUpload: {
-        uploadUrl : './image'
-    }
 };
 
-const $main = document.getElementById('main');
 
 ClassicEditor.create($main['content'], editorConfig).then((editor) => {
     $main.onsubmit = (e) => {
@@ -409,30 +408,36 @@ ClassicEditor.create($main['content'], editorConfig).then((editor) => {
             $main['passwordCheck'].focus();
             return;
         }
+        const url = new URL(location.href);
         const xhr = new XMLHttpRequest();
         const formData = new FormData();
-        formData.append('nickname', $main['nickname'].value);
-        formData.append('password', $main['password'].value);
-        formData.append('title', $main['title'].value);  // 글 제목
-        formData.append('content', editor.getData());   // 글 내용
+        formData.append('index', url.searchParams.get('index')); // 주소에 있는 index
+        formData.append('oldPassword', url.searchParams.get('password')); // 주소에 있는 password ( 이거는 옛 비밀 번호임 . 현재 게시글의 비밀번호와 일치하는지 확인하는 용도 )
+        formData.append('nickname', $main['nickname'].value); // 닉네임 싣고
+        formData.append('password', $main['password'].value); // 비밀번호를 싣고 ( 이거는 신규 비밀번호임. 물론 옛 비밀번호와 같을 수도 있지만 보장이 없음으로 분리하여 생각하여야 함. 검증용도로 사용하지 말 것.
+        formData.append('title', $main['title'].value);  // 제목 싣고
+        formData.append('content', editor.getData());   //  내용 싣고
+
         xhr.onreadystatechange = () => {
+
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
             if (xhr.status < 200 || xhr.status >= 300) {
-                alert('게시글을 작성하지 못하였습니다. 잠시 후 다시 시도해 주세요');
+                alert('게시글을 수정하지 못하였습니다. 잠시 후 다시 시도해 주세요');
                 return;
             }
             const response = JSON.parse(xhr.responseText);
             if (response['result'] === true) {
-                location.href = `./read?index=${response['index']}`;
+                location.href = `./read?index=${url.searchParams.get('index')}`;
             }
             else {
-                alert('게시글을 작성하지 못하였습니다. 잠시 후 다시 시도해 주세요');
+                alert('게시글을 수정하지 못하였습니다. 잠시 후 다시 시도해 주세요');
             }
         };
-        xhr.open('POST', location.href); // xhr.open('POST', location.href); // 똑같은거임
-        xhr.send(formData); // xhr.send() <- 이렇게 보내면 제목이랑 내용 데이터 안 보내짐
+        xhr.open('PATCH', './modify');   //  location.href = http://localhost:8080/article/modify?index=3&password=TEST
+        xhr.send(formData);                         // ./modift     = http://localhost:8080/article/modify
+                                                    // location.href로 하면 도메인의 패스워드와 formDate의 패스워드가 두 번 들어가게 됨
     };
 });
 

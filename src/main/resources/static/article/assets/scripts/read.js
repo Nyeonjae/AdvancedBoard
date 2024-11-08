@@ -51,7 +51,7 @@ const $main = document.getElementById('main');
                 return;
                 }
                 if (xhr.status < 200 || xhr.status >= 300 ) {
-                alert('게시글을 삭제하기 못하였ㅅ브니다. 잠시 후 다시 시도해 주세요.')
+                alert('게시글을 삭제하기 못하였습니다. 잠시 후 다시 시도해 주세요.')
                 return;
                 }
                 const response = JSON.parse(xhr.responseText);
@@ -77,10 +77,7 @@ const $main = document.getElementById('main');
 
             xhr.open('DELETE','./read' ); // /article/read
             xhr.send(formData);
-            
-            
         }
-
         if ($passwordDialog['mode'].value === 'modify') {
             const url = new URL(location.href);
             url.pathname = '/article/modify';
@@ -90,3 +87,184 @@ const $main = document.getElementById('main');
         }
     };
 }
+
+
+
+{
+    const $list = $main.querySelector(':scope > .comment-container > .list');
+
+    const appendComment = (comment) => {
+        const i = comment['index'];
+        const $item = new DOMParser().parseFromString(
+            ` <li class="item">
+                <div class="top">
+                <span class="nickname">${comment['nickname']}</span>
+                <span class="spring"></span>
+                <span class="datetime">${comment['createdAt']}</span>
+
+                </div>
+                <div class="content">${comment['content']}</div>
+                <div class="action-container">
+                    <input id="commentNoAction${i}" name="comment${i}" type="radio" value="noAction">
+                    <label class="action">
+                        <input name="comment${i}" type="radio" value="reply">
+                        <span class="text">답글 쓰기</span>
+                    </label>
+                    <label class="action">
+                        <input name="comment${i}" type="radio" value="modify">
+                        <span class="text">수정</span>
+                    </label>
+                    <button class="action" name="delete" type="button">삭제</button>
+                </div>
+
+
+<!--                ##########################절취선 ############################################-->
+                <form class="form reply">
+                    <input name="commentIndex" type="hidden" value="${comment['index']}">
+                    <input type="hidden">
+                    <div class="writer-wrapper">
+                        <label class="label">
+                            <span class="text">작성자</span>
+                            <input required class="field" maxlength="10" minlength="1" name="nickname" type="text">
+                        </label>
+                        <label class="label">
+                            <span class="text">비밀번호</span>
+                            <input required class="field" maxlength="50" minlength="4" name="password" type="password">
+                        </label>
+                    </div>
+                    <label class="label spring">
+                        <span class="text">내용</span>
+                        <textarea required class="field" maxlength="100" minlength="1" name="content"></textarea>
+                    </label>
+                    <div class="button-container">
+                        <button class="--obj-button -blue" type="submit">답글 쓰기</button>
+                        <label class="--obj-button -light" for="commentNoAction${i}">취소</label>
+                    </div>
+                </form>
+                <form class="form modify">
+                    <input type="hidden">
+                    <div class="writer-wrapper">
+                        <label class="label">
+                            <span class="text">작성자</span>
+                            <input required class="field" maxlength="10" minlength="1" name="nickname" type="text" value="${comment['nickname']}">
+                        </label>
+                        <label class="label">
+                            <span class="text">비밀번호</span>
+                            <input required class="field" maxlength="50" minlength="4" name="password" type="password">
+                        </label>
+                    </div>
+                    <label class="label spring">
+                        <span class="text">내용</span>
+                        <textarea required class="field" maxlength="100" minlength="1" name="content">${comment['content']}</textarea>
+                    </label>
+                    <div class="button-container">
+                        <button class="--obj-button -blue" type="submit">댓글 수정</button>
+                        <label class="--obj-button -light" for="commentNoAction${i}">취소</label>
+                    </div>
+
+                </form>
+
+            </li>`,
+            'text/html').querySelector('li.item')
+
+        const $replyForm = $item.querySelector('.form.reply');
+        $replyForm.onsubmit = (e) => {
+            e.preventDefault();
+            postComment($replyForm);
+        };
+        $list.append($item);
+        return $item;
+    };
+
+    const appendComments = (allComments,targetComments, step) => {
+        for (const comment of targetComments) {
+            appendComment(comment).style.marginLeft = `${step * 50}px`;
+            const subComments = allComments.filter((x) => x['commentIndex'] === comment['index']);
+            appendComments(allComments, subComments, step + 1);
+        }
+    }
+
+
+    const loadComments = () => {
+        $list.innerHTML = '';
+        const url = new URL(location.href);
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE ) {
+
+            return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300 ) {
+            alert('댓글 정보를 불러오지 못하였습니다. 잠시 후 다시 시도해 주세요.')
+            return;
+            }
+            const allComments = JSON.parse(xhr.responseText);
+            const rootComments = allComments.filter((x) => x['commentIndex'] == null); // 대댓글 제외
+            appendComments(allComments, rootComments, 0);
+
+
+
+        };
+        xhr.open('GET', `../comment/comments?articleIndex=${url.searchParams.get('index')}`); // 게시글의 index 를 의미
+        xhr.send();
+    };
+
+
+
+
+    loadComments();
+
+    const postComment = ($form) => {
+        if ($form['nickname'].value === '') {
+            alert('작성자를 입력해 주세요');
+            return;
+        }
+        if ($form['password'].value === '') {
+            alert('비밀번호를 입력해 주세요');
+            return;
+        }
+        if ($form['content'].value === '') {
+            alert('내용을 입력해 주세요');
+            return;
+        }
+        const url = new URL(location.href);
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        if ($form['commentIndex'] != null) {
+            // != null 이거는 !==null && !== undefined 이거를 줄여 쓴거임
+            formData.append('commentIndex', $form['commentIndex'].value);
+        }
+        formData.append('articleIndex', url.searchParams.get('index')); // index 는 댓글의 순번 / get('index') 는 주소창의 순번
+        formData.append('nickname' , $form['nickname'].value);
+        formData.append('password' , $form['password'].value);
+        formData.append('content' , $form['content'].value);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE ) {
+            return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300 ) {
+            alert('댓글을 작성하지 못하였습니다. 잠시 후 다시 시도해 주세요.');
+            return;
+            }
+            $form['content'].value = '';
+            $form['content'].focus();
+            loadComments();
+        };
+        xhr.open('POST', '../comment/' ); // http://localhost:8080/article/ 에서 article 자리에 /comment/ 가 들어갈거임
+        xhr.send(formData);
+    };
+    const $commentForm = document.getElementById('commentForm');
+    $commentForm.onsubmit = (e) => {
+        e.preventDefault();
+        postComment($commentForm);
+    };
+}
+
+
+
+
+
+
+
+
+

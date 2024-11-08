@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="${board == null ? '오류겐' : board.getText()}">종율인사이드</title>
+    <title th:text="${board == null ? '오류' : board.getText()}">종율인사이드</title>
     <script defer th:if="${board == null}">
         alert('존재하지 않는 게시판입니다. 주소를 다시 확인해 주세요.'); // 클라이언트 실행
         if (history.length <= 1) {

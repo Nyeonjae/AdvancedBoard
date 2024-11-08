@@ -30,6 +30,13 @@ h1, h2, h3, h4, h5, h6 {
   margin-inline: 0;
 }
 
+ol, ul {
+  list-style-type: none;
+  margin-block: 0;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
 .--obj-button {
   border-radius: 0.25rem;
   cursor: pointer;
@@ -37,6 +44,11 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
   text-decoration: none;
   user-select: none;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  justify-content: center;
 }
 .--obj-button.-light {
   background-color: #a0a0a0;

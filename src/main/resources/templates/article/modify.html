@@ -31,25 +31,25 @@
     <h1 class="title write" th:text="${'글 수정 -' + board.getText()}"></h1> <!--서버에서 실행됨-->
     <div class="writer-container">
         <label class="label">
-            <input required type="text" class="input nickname" maxlength="10" placeholder="닉네임" minlength="2" name="nickname">
+            <input required type="text" class="input nickname" maxlength="10" placeholder="닉네임" minlength="2" name="nickname" th:value="${article.getNickname()}">
         </label>
         <label class="label">
-            <input required type="password" class="input password" maxlength="50" placeholder="비밀번호" minlength="4" name="password">
+            <input required type="password" class="input password" maxlength="50" placeholder="비밀번호" minlength="4" name="password" th:value="${article.getPassword()}">
         </label>
         <label class="label">
             <input required type="password" class="input password-check" maxlength="50" placeholder="비밀번호 확인" minlength="4" name="passwordCheck">
         </label>
     </div>
     <label class="label">
-        <input required class="input title" maxlength="100" name="title" placeholder="제목을 입력해 주세요." type="text">
+        <input required class="input title" maxlength="100" name="title" placeholder="제목을 입력해 주세요." type="text" th:value="${article.getTitle()}">
     </label>
     <label class="label">
-        <textarea class="content" name="content"></textarea>
+        <textarea class="content" name="content" th:text="${article.getContent()}"></textarea>
     </label>
     <div class="button-container">
         <div class="spring"></div>
-        <a th:href="@{'/board/list' (id=${board.getId()})}" class="button cancel --obj-button -light">취소</a>
-        <button class="button write --obj-button -blue" type="submit">작성</button>
+        <a  class="button cancel --obj-button -light" th:href="@{'/article/read' (index=${article.getIndex()})}">취소</a>
+        <button class="button write --obj-button -blue" type="submit">수정</button>
     </div>
 </form>
 
