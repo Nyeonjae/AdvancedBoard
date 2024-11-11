@@ -84,8 +84,7 @@ public class ArticleController {
 
     @RequestMapping(value = "/modify", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String patchModify(@RequestParam(value = "oldPassword", required = false)String oldPassword,
-                              ArticleEntity article) {
+    public String patchModify(@RequestParam(value = "oldPassword", required = false)String oldPassword, ArticleEntity article) {
         boolean result = this.articleService.modifyArticle(article, oldPassword);
         JSONObject response = new JSONObject();
         response.put("result", result);

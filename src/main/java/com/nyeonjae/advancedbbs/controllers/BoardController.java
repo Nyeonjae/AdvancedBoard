@@ -1,6 +1,7 @@
 package com.nyeonjae.advancedbbs.controllers;
 
 import com.nyeonjae.advancedbbs.entities.BoardEntity;
+import com.nyeonjae.advancedbbs.services.ArticleService;
 import com.nyeonjae.advancedbbs.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,10 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(value = "/board")
 public class BoardController {
+    private final ArticleService articleService;
     private final BoardService boardService;
 
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardController(ArticleService articleService, BoardService boardService) {
+        this.articleService = articleService;
+
         this.boardService = boardService;
     }
 
@@ -28,6 +32,10 @@ public class BoardController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("board", board);
+        if (board != null) {
+            modelAndView.addObject("articles", this.articleService.getArticleByBoardId(id));
+        }
+
         modelAndView.setViewName("board/list");
         return modelAndView;
     }

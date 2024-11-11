@@ -33,27 +33,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>3</td>
-            <td>양다리 걸친 썰 푼다 ㅋㅋ</td>
-            <td>김종율</td>
-            <td>333</td>
-            <td>2024-10-30 13:33</td>
+        <tr th:each="article : ${articles}">
+            <td th:text="${article.getIndex}"></td>
+            <td>
+                <a th:text="${article.getTitle()}" th:href="@{'/article/read' (index=${article.getIndex()})}"></a>
+                <b>[<span th:text="${article.getCommentCount()}"></span>]</b>
+            </td>
+            <td th:text="${article.getNickname()}"></td>
+            <td th:text="${article.getView()}"></td>
+            <td th:text="${#temporals.format(article.getCreatedAt(), 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
-        <tr>
-            <td>2</td>
-            <td>아까 학원 얘기한 사람인데 고소당했다</td>
-            <td>김종율</td>
-            <td>2,222</td>
-            <td>2024-10-30 12:22</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>학원에서 옆자리 사람 존나 불편하지 않냐?</td>
-            <td>김종율</td>
-            <td>1</td>
-            <td>2024-10-30 12:11</td>
-        </tr>
+
 
         </tbody>
     </table>

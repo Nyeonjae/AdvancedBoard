@@ -5,7 +5,7 @@ import com.nyeonjae.advancedbbs.entities.ImageEntity;
 import com.nyeonjae.advancedbbs.mappers.ArticleMapper;
 import com.nyeonjae.advancedbbs.mappers.ImageMapper;
 import com.nyeonjae.advancedbbs.results.article.DeleteArticleResult;
-import lombok.RequiredArgsConstructor;
+import com.nyeonjae.advancedbbs.vos.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +50,12 @@ public class ArticleService {
                 : DeleteArticleResult.FAILURE;
     }
 
+    public ArticleVo[] getArticleByBoardId(String boardId) {
+        if (boardId == null) {
+            return null;
+        }
+        return this.articleMapper.selectArticlesByBoardId(boardId);
+    }
 
     public ArticleEntity getArticle(int index) {
         if (index < 1) {

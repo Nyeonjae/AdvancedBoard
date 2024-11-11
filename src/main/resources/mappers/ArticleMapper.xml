@@ -32,6 +32,28 @@
         LIMIT 1
     </select>
 
+    <select id="selectArticlesByBoardId"
+            resultType="com.nyeonjae.advancedbbs.vos.ArticleVo">
+        SELECT `index`                                                AS `index`,
+               `board_id`                                             AS `boardId`,
+               `nickname`                                             AS `nickname`,
+               `password`                                             AS `password`,
+               `title`                                                AS `title`,
+               `content`                                              AS `content`,
+               `view`                                                 AS `view`,
+               `created_at`                                           AS `createdAt`,
+               `updated_at`                                           AS `updatedAt`,
+               `deleted_at`                                           AS `deletedAt`,
+               (SELECT COUNT(0)
+                FROM `advanced_bbs`.`comments`
+                WHERE `advanced_bbs`.`comments`.`article_index` = `advanced_bbs`.`articles`.`index`
+                  AND `advanced_bbs`.`comments`.`deleted_at` IS NULL) AS `commentCount`
+        FROM `advanced_bbs`.`articles`
+        WHERE `board_id` = #{boardId}
+          AND `deleted_at` IS NULL
+        ORDER BY `index` DESC
+    </select>
+
     <update id="updateArticle"
         parameterType="com.nyeonjae.advancedbbs.entities.ArticleEntity">
         UPDATE `advanced_bbs`.`articles`
@@ -47,6 +69,8 @@
         WHERE `index` = #{index}
         LIMIT 1
     </update>
+
+
 </mapper>
 
 
