@@ -3,6 +3,9 @@ package com.nyeonjae.advancedbbs.controllers;
 import com.nyeonjae.advancedbbs.entities.BoardEntity;
 import com.nyeonjae.advancedbbs.services.ArticleService;
 import com.nyeonjae.advancedbbs.services.BoardService;
+import com.nyeonjae.advancedbbs.vos.ArticleVo;
+import com.nyeonjae.advancedbbs.vos.PageVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -24,19 +27,39 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getList(
-            @RequestParam(value = "id", required = false) String id )
-    {
+            @RequestParam(value = "id", required = false) String id,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        System.out.println(page);
         BoardEntity board = this.boardService.getBoard(id);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("board", board);
         if (board != null) {
-            modelAndView.addObject("articles", this.articleService.getArticleByBoardId(id));
-        }
 
+            if (filter == null || keyword == null) {
+                Pair<PageVo, ArticleVo[]> pair = this.articleService.getArticleByBoardId(id, page);
+                modelAndView.addObject("pageVo", pair.getLeft());
+                modelAndView.addObject("articles", pair.getRight());
+            }
+            else {
+                Pair<PageVo, ArticleVo[]> pair = this.articleService.searchArticles(id, page, filter, keyword);
+                modelAndView.addObject("pageVo", pair.getLeft());
+                modelAndView.addObject("articles", pair.getRight());
+                modelAndView.addObject("filter", filter);
+                modelAndView.addObject("keyword", keyword);
+            }
+
+        }
         modelAndView.setViewName("board/list");
         return modelAndView;
     }
 }
+
+
+
+

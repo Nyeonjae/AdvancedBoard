@@ -6,6 +6,8 @@ import com.nyeonjae.advancedbbs.mappers.ArticleMapper;
 import com.nyeonjae.advancedbbs.mappers.ImageMapper;
 import com.nyeonjae.advancedbbs.results.article.DeleteArticleResult;
 import com.nyeonjae.advancedbbs.vos.ArticleVo;
+import com.nyeonjae.advancedbbs.vos.PageVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +52,48 @@ public class ArticleService {
                 : DeleteArticleResult.FAILURE;
     }
 
-    public ArticleVo[] getArticleByBoardId(String boardId) {
+    public Pair<PageVo, ArticleVo[]> getArticleByBoardId(String boardId, int page) {
+        page = Math.max(1, page);
+        // page = page < ? 1: page; // 위와 같은 조건, Math 쓰는것을 권장
+
         if (boardId == null) {
             return null;
         }
-        return this.articleMapper.selectArticlesByBoardId(boardId);
+        int totalCount = this.articleMapper.selectArticleCountByBoardId(boardId); // 전체 게시글의 갯수
+        PageVo pageVo = new PageVo(page, totalCount);
+        ArticleVo[] articleVos = this.articleMapper.selectArticlesByBoardId(
+                boardId,
+                pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, articleVos);
+        // 여러 타입을 반환하고 싶을때, Pair를 씀
     }
+
+    public Pair<PageVo, ArticleVo[]> searchArticles(String boardId, int page, String filter, String keyword) {
+        page = Math.max(1, page);
+        // page = page < ? 1: page; // 위와 같은 조건, Math 쓰는것을 권장
+        if (filter == null || (!filter.equals("all") && !filter.equals("title") && !filter.equals("nickname"))) {
+            filter = "all";
+        }
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        if (boardId == null) {
+            return null;
+        }
+        int totalCount = this.articleMapper.selectArticleCountBySearch(boardId, filter, keyword); // 전체 게시글의 갯수
+        PageVo pageVo = new PageVo(page, totalCount);
+        ArticleVo[] articleVos = this.articleMapper.selectArticlesBySearch(
+                boardId,
+                filter,
+                keyword,
+                pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, articleVos);
+        // 여러 타입을 반환하고 싶을때, Pair를 씀
+    }
+
 
     public ArticleEntity getArticle(int index) {
         if (index < 1) {
