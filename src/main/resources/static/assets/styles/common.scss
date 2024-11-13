@@ -2,6 +2,8 @@
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
+
+
 body {
   background-color: #f5f5f5;
   color: #212121;
@@ -54,6 +56,30 @@ ol, ul {
     background-color: darken($bg, 10%);
   }
 }
+
+.--board-nav {
+  background-color: #ffffff;
+  border: 0.0625rem solid #eeeeee;
+  padding: 1rem;
+
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+
+  > ._link {
+    color: #212121;
+    text-decoration: none;
+
+    &:hover {
+      color: #387aeb;
+      text-decoration: underline;
+    }
+  }
+}
+
 
 .--obj-button {
   border-radius: 0.25rem;

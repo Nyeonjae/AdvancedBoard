@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/board/assets/styles/list.css">
 </head>
 <body th:if="${board != null}">
+<th:block th:replace="~{fragments/common.html :: boardNav}"></th:block>
 <main id="main">
     <h1 class="title" th:text="${board.getText()}"></h1> <!--서버에서 실행됨-->
     <table class="article-table">
@@ -33,6 +34,9 @@
         </tr>
         </thead>
         <tbody>
+        <tr class="empty" th:if="${articles == null || articles.length == 0}">
+            <td colspan="5">표시할 내용이 없습니다.</td>
+        </tr>
         <tr th:each="article : ${articles}">
             <td th:text="${article.getIndex}"></td>
             <td>
@@ -47,11 +51,13 @@
 
         </tbody>
     </table>
-    <div class="move">
+    <div class="move" th:if="${articles != null && articles.length > 0}">
         <a th:if="${pageVo.requestPage > pageVo.movableMinPage}"
-           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}" class="page first">|&lt;</a>
+           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"
+           class="page first">|&lt;</a>
         <a th:if="${pageVo.requestPage > pageVo.movableMinPage}"
-           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}" class="page prev">&lt;</a>
+           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"
+           class="page prev">&lt;</a>
         <div class="page-container">
             <a class="page"
                th:each="page : ${#numbers.sequence(pageVo.displayMinPage, pageVo.displayMaxPage)}"
@@ -61,9 +67,11 @@
 
         </div>
         <a th:if="${pageVo.requestPage < pageVo.movableMaxPage}"
-                th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}" class="page next">&gt;</a>
+           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"
+           class="page next">&gt;</a>
         <a th:if="${pageVo.requestPage < pageVo.movableMaxPage}"
-                th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.displayMaxPage}, filter=${filter}, keyword=${keyword})}" class="page last">&gt;|</a>
+           th:href="@{'/board/list' (id=${board.getId()}, page=${pageVo.displayMaxPage}, filter=${filter}, keyword=${keyword})}"
+           class="page last">&gt;|</a>
 
     </div>
     <div class="button-container">

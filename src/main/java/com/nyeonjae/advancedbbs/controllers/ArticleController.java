@@ -77,6 +77,7 @@ public class ArticleController {
              BoardEntity board = this.boardService.getBoard(article.getBoardId()); // 게시글의 boardId로 게시판을 가져와서
              modelAndView.addObject("article", article); // 타임리프 HTML로 게시글도 넘겨주고
              modelAndView.addObject("board", board); // 타임리프 HTML로 게시판도 넘겨주고
+             modelAndView.addObject("boards", this.boardService.getBoards());
         }
         modelAndView.setViewName("article/modify");
         return modelAndView;
@@ -116,6 +117,7 @@ public class ArticleController {
             this.articleService.increaseArticleView(article);
             BoardEntity board = this.boardService.getBoard(article.getBoardId());
             modelAndView.addObject("board", board);
+            modelAndView.addObject("boards", this.boardService.getBoards());
         }
         modelAndView.addObject("article", article);
         modelAndView.setViewName("article/read");
@@ -130,6 +132,9 @@ public class ArticleController {
         BoardEntity board = this.boardService.getBoard(boardId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("board", board);
+        if (board != null) {
+            modelAndView.addObject("boards", this.boardService.getBoards());
+        }
 
         modelAndView.setViewName("article/write");
         return modelAndView;

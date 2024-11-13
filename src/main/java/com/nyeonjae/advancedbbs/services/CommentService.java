@@ -54,7 +54,12 @@ public class CommentService {
         if (articleIndex < 1) {
             return null;
         }
-        return this.commentMapper.selectCommentsByArticleIndex(articleIndex);
+
+        CommentEntity[] comments = this.commentMapper.selectCommentsByArticleIndex(articleIndex);
+        for (CommentEntity comment : comments) {
+            comment.setPassword(null);
+        }
+        return comments;
     }
 
     public ModifyCommentResult modifyComment(int index, String password, String content) {

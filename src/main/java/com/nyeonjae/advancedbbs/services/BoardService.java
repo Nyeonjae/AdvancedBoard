@@ -20,5 +20,10 @@ public class BoardService {
             return null;
         }
         return this.boardMapper.selectBoardById(id);
+
+
+        }
+    public BoardEntity[] getBoards() {
+        return this.boardMapper.selectBoards();
     }
 }

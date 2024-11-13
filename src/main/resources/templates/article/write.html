@@ -27,6 +27,7 @@
 
 </head>
 <body th:if="${board != null}">
+<th:block th:replace="~{fragments/common.html :: boardNav}"></th:block>
 <form method="post" id="main">
     <h1 class="title write" th:text="${'작성 -' + board.getText()}"></h1> <!--서버에서 실행됨-->
     <div class="writer-container">

@@ -11,5 +11,13 @@
         WHERE `id` = #{id}          <!-- 보드매퍼의 Param 이랑 똑같이 -->
         LIMIT 1                     <!--for문이 계속 도는걸 방지 -->
 </select>
+    <select id="selectBoards"
+            resultType="com.nyeonjae.advancedbbs.entities.BoardEntity">
+    SELECT `id` AS `id`,
+           `text` AS `text`
+    FROM `advanced_bbs`.`boards`
+
+
+    </select>
 </mapper>
 

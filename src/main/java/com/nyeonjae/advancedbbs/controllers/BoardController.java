@@ -53,6 +53,7 @@ public class BoardController {
                 modelAndView.addObject("filter", filter);
                 modelAndView.addObject("keyword", keyword);
             }
+            modelAndView.addObject("boards", this.boardService.getBoards());
 
         }
         modelAndView.setViewName("board/list");
